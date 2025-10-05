@@ -15,7 +15,7 @@
         int jangkaWaktuBulan = (int)(jangkaWaktuTahun * 12);
 
         // bunga berdasarkan jangka waktu
-        decimal bungaTahunan = 0;
+        decimal bungaTahunan;
         if (jangkaWaktuBulan > 12 && jangkaWaktuBulan <= 24)
         {
             bungaTahunan = 0.14m; // bunga 14%
