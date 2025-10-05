@@ -1,64 +1,47 @@
 ﻿class Program
 {
-    public static void Main(string[] args)
+    public static void Main()
     {
-        Console.WriteLine("=== SISTEM KREDIT IMS FINANCE ===");
+        Console.WriteLine("=== SISTEM KREDIT IMS FINANCE ===\n");
 
-        // data kontrak
-        string kontrakNo = "AGR00001";
-        string client = "SUGUS";
-        decimal otr = 240_000_000m;
-        decimal dpPercentage = 20m;
-        int tenorBulan = 18;
-        DateTime tanggalKontrak = new DateTime(2023, 12, 25);
+        // data
+        decimal hargaMobil = 240000000m;
+        decimal dpPersen = 0.20m;
+        double jangkaWaktuTahun = 1.5;
 
-        // hitung dp dan pokok pinjaman
-        decimal downPayment = otr * (dpPercentage / 100);
-        decimal pokokPinjaman = otr - downPayment;
+        // dp dan pokok hutang
+        decimal dp = hargaMobil * dpPersen;
+        decimal pokokUtang = hargaMobil - dp;
+        int jangkaWaktuBulan = (int)(jangkaWaktuTahun * 12);
 
-        // hitung bunga (asumsi flat 6% per tahun)
-        decimal bungaTahunan = 6m;
-        decimal totalBunga = pokokPinjaman * (bungaTahunan / 100) * (tenorBulan / 12m);
+        // bunga berdasarkan jangka waktu
+        decimal bungaTahunan = 0;
+        if (jangkaWaktuBulan > 12 && jangkaWaktuBulan <= 24)
+        {
+            bungaTahunan = 0.14m; // bunga 14%
+        }
+        else if (jangkaWaktuBulan <= 12)
+        {
+            bungaTahunan = 0.12m;
+        }
+        else
+        {
+            bungaTahunan = 0.165m;
+        }
 
-        decimal totalPembayaran = pokokPinjaman * totalBunga;
-        decimal angsuranPerBulan = totalPembayaran / tenorBulan;
+        // angsuran perbulan
+        // (pokok utang + (pokok utang * bunga)) / jangka waktu
+        decimal totalBunga = pokokUtang * bungaTahunan;
+        decimal angsuranPerBulan = (pokokUtang + totalBunga) / jangkaWaktuBulan;
 
-        Console.WriteLine("DETAIL KONTRAK:");
-        Console.WriteLine($"Kontrak No: {kontrakNo}");
-        Console.WriteLine($"Client: {client}");
-        Console.WriteLine($"OTR (Harga Mobil): {otr:N0}");
-        Console.WriteLine($"Down Payment (20%): {downPayment:N0}");
-        Console.WriteLine($"Pokok Pinjaman: {pokokPinjaman:N0}");
-        Console.WriteLine($"Bunga ({bungaTahunan}% per tahun): {totalBunga:N0}");
-        Console.WriteLine($"Total Pembayaran: {totalPembayaran:N0}");
-        Console.WriteLine($"Tenor: {tenorBulan} bulan");
-        Console.WriteLine($"\nANGSURAN PER BULAN: Rp {angsuranPerBulan:N0}");
-
-        Console.WriteLine($"\n {new string('=', 50)} \n");
+        // hasil
+        Console.WriteLine($"--- Perhitungan Angsuran Pak Sugus ---");
+        Console.WriteLine($"Harga Mobil      : {hargaMobil:N0}");
+        Console.WriteLine($"DP (20%)         : {dp:N0}");
+        Console.WriteLine($"Pokok Utang      : {pokokUtang:N0}");
+        Console.WriteLine($"Jangka Waktu     : {jangkaWaktuBulan} bulan");
+        Console.WriteLine($"Bunga per Tahun  : {bungaTahunan:P0}");
+        Console.WriteLine("-------------------------------------------");
+        Console.WriteLine($"Angsuran per Bulan : Rp {angsuranPerBulan:N0}");
     }
-
-}
-// model classes
-public class JadwalAngsuran
-{
-    public string KontrakNo { get; set; } = string.Empty;
-    public string Client { get; set; } = string.Empty;
-    public int AngsuranKe { get; set; }
-    public decimal AngsuranPerBulan { get; set; }
-    public DateTime TanggalJatuhTempo { get; set; }
-}
-
-public class AngsuranJatuhTempo
-{
-    public decimal TotalAngsuran { get; set; }
-    public int JumlahAngsuran { get; set; }
-}
-
-public class DendaKeterlambantan
-{
-    public string KontrakNo { get; set; } = string.Empty;
-    public string Client { get; set; } = string.Empty;
-    public int AngsuranKe { get; set; }
-    public int HariKeterlambatan { get; set; }
-    public decimal TotalDenda { get; set; }
 }
